@@ -11,14 +11,15 @@ func validateRecord(record string) string {
 	return strings.Trim(record, "\t ")
 }
 
-func StreamCSVInChunks(source io.ReadCloser, chunkSize int, processChunk func([]string)) error {
-	defer source.Close()
+func StreamCSVInChunks(source io.Reader, chunkSize int, processChunk func([]string)) error {
+	// defer source.Close()
 
 	// Create a CSV reader
 	reader := csv.NewReader(source)
 	// reader.ReuseRecord = true
 	reader.FieldsPerRecord = 1 //TODO: confirm what this does exactly
 
+	// read the header from the csv
 	_, err := reader.Read()
 	if err != nil {
 		return fmt.Errorf("error reading the header row: %w", err)
@@ -27,7 +28,7 @@ func StreamCSVInChunks(source io.ReadCloser, chunkSize int, processChunk func([]
 	// Read the file in chunks
 	chunk := make([]string, 0, chunkSize)
 	for {
-		chunk = chunk[:0] // Reset slice length, retain capacity
+		chunk = chunk[:0] // reuse the chunk by Reseting slice length and retain capacity
 		// Read up to chunkSize lines
 		for i := 0; i < chunkSize; i++ {
 			record, err := reader.Read()
@@ -57,12 +58,12 @@ func StreamCSVInChunks(source io.ReadCloser, chunkSize int, processChunk func([]
 }
 
 type ComparisonResult struct {
-	KeyCountA         uint64
-	KeyCountB         uint64
-	DistinctKeyCountA uint64
-	DistinctKeyCountB uint64
-	DistinctOverlap   uint64
-	TotalMaxOverlap   uint64
+	KeyCountA         uint
+	KeyCountB         uint
+	DistinctKeyCountA uint
+	DistinctKeyCountB uint
+	DistinctOverlap   uint
+	TotalMaxOverlap   uint
 }
 
 func (c ComparisonResult) Print(w io.Writer) {

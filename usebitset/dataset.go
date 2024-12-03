@@ -12,17 +12,15 @@ import (
 )
 
 type dataset struct {
-	resource  io.ReadCloser
+	resource  io.Reader
 	bitset    *bitset.BitSet
 	cms       *cms.CountMinSketch
 	totalKeys int64
 }
 
-func newDataset(resource io.ReadCloser, epsilon, delta float64) (*dataset, error) {
-	// // epsilon, delta := 0.00001, 0.8 // (3, 200,000)// passes for the tasks files
-	// epsilon, delta := 0.0000001, 0.9  // (3, 20, 000, 000) // passes for the generated files
-
-	//countminsketch.New(3, 2_000_00) // cms.NewWithEstimates(epsilon, delta)
+// epsilon, delta := 0.00001, 0.8 OR (D = 3, W = 200,000) // values that works well for the tasks files
+// epsilon, delta := 0.0000001, 0.9 OR (D = 3, W = 20,000,000) // values that works well for the generated files
+func newDataset(resource io.Reader, epsilon, delta float64) (*dataset, error) {
 	cms, err := countminsketch.NewWithEstimates(epsilon, delta)
 	if err != nil {
 		return nil, err
@@ -40,7 +38,6 @@ func (d *dataset) distinctCount() uint {
 	return d.bitset.Count()
 }
 
-// func (bsc bitsetComparator) processCSVFile(file io.ReadCloser, totalKeys *uint64, bs *bitset.BitSet, cms *countminsketch.CountMinSketch) {
 func (d *dataset) processCSVFile(chunksize int) {
 	err := results.StreamCSVInChunks(d.resource, chunksize, func(records []string) {
 		// Process each record

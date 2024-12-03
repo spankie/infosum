@@ -10,7 +10,6 @@ import (
 
 	"github.com/spankie/infosum/results"
 	"github.com/spankie/infosum/usebitset"
-	"github.com/spankie/infosum/usemaps"
 )
 
 func mustGetCSVFIle(filePath string) io.ReadCloser {
@@ -32,7 +31,7 @@ func printMemoryUsage() {
 }
 
 type Comparator interface {
-	Compare(resource1, resource2 io.ReadCloser) (*results.ComparisonResult, error)
+	Compare(resource1, resource2 io.Reader) (*results.ComparisonResult, error)
 }
 
 func main() {
@@ -51,17 +50,21 @@ func main() {
 	fmt.Printf("File B: %s\n", filenameB)
 
 	fileA := mustGetCSVFIle(filenameA)
+	defer fileA.Close()
 	fileB := mustGetCSVFIle(filenameB)
+	defer fileB.Close()
 
 	var comparator Comparator
 	chunksize := 1000
 
-	comparator = usemaps.NewComparator(chunksize)
-	// result, err := comparator.Compare(fileA, fileB)
-	// if err != nil {
-	// 	fmt.Printf("err getting result: %v", err)
-	// 	os.Exit(1)
-	// }
+	/*
+		comparator = usemaps.NewComparator(chunksize)
+		result, err := comparator.Compare(fileA, fileB)
+		if err != nil {
+			fmt.Printf("err getting result: %v", err)
+			os.Exit(1)
+		}
+	*/
 
 	// 0.00001, 0.8 works well with the given sample data
 	comparator = usebitset.NewComparator(chunksize, 0.00001, 0.8)

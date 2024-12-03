@@ -24,7 +24,7 @@ func NewComparator(chunksize int, epsilon, delta float64) bitsetComparator {
 }
 
 // TODO: pass the estimation parameters
-func (bsc bitsetComparator) Compare(fileA, fileB io.ReadCloser) (*results.ComparisonResult, error) {
+func (bsc bitsetComparator) Compare(fileA, fileB io.Reader) (*results.ComparisonResult, error) {
 	// Bitset of 100M bits to track 8 digits udprn keys
 	// 100_000_000
 	// bitsetA := bitset.New(100)
@@ -69,10 +69,10 @@ func (bsc bitsetComparator) Compare(fileA, fileB io.ReadCloser) (*results.Compar
 	wg.Wait()
 
 	result := &results.ComparisonResult{
-		KeyCountA:         uint64(datasetA.totalKeys),
-		KeyCountB:         uint64(datasetB.totalKeys),
-		DistinctKeyCountA: uint64(datasetA.distinctCount()),
-		DistinctKeyCountB: uint64(datasetB.distinctCount()),
+		KeyCountA:         uint(datasetA.totalKeys),
+		KeyCountB:         uint(datasetB.totalKeys),
+		DistinctKeyCountA: uint(datasetA.distinctCount()),
+		DistinctKeyCountB: uint(datasetB.distinctCount()),
 	}
 	result.DistinctOverlap, result.TotalMaxOverlap = bsc.distinctOverlap(datasetA, datasetB)
 
@@ -85,11 +85,11 @@ func (bsc bitsetComparator) Compare(fileA, fileB io.ReadCloser) (*results.Compar
 	return result, nil
 }
 
-func (bsc bitsetComparator) distinctOverlap(d1, d2 *dataset) (uint64, uint64) {
+func (bsc bitsetComparator) distinctOverlap(d1, d2 *dataset) (uint, uint) {
 	intersection := d1.bitset.Intersection(d2.bitset)
 	distinctOverlap := intersection.Count()
 	totalMaxOveralp := getTotalOverlapMany(intersection, d1.cms, d2.cms)
-	return uint64(distinctOverlap), uint64(totalMaxOveralp)
+	return uint(distinctOverlap), uint(totalMaxOveralp)
 }
 
 func getTotalOverlapMany(bs *bitset.BitSet, cmsA, cmsB *countminsketch.CountMinSketch) int64 {
