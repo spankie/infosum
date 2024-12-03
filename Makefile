@@ -1,5 +1,5 @@
-BIG_FILE_A=data/bigger/A_f_2.csv
-BIG_FILE_B=data/bigger/B_f_2.csv
+# BIG_FILE_A=data/bigger/A_f_2.csv
+# BIG_FILE_B=data/bigger/B_f_2.csv
 
 FILE_A=data/A_f.csv
 FILE_B=data/B_f.csv

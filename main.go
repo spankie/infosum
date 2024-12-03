@@ -6,8 +6,6 @@ import (
 	"os"
 	"runtime"
 
-	_ "net/http/pprof"
-
 	"github.com/spankie/infosum/results"
 	"github.com/spankie/infosum/usebitset"
 )

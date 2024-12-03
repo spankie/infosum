@@ -124,6 +124,8 @@ func TestCompareWithBitSet(t *testing.T) {
 	})
 
 	t.Run("using bigger generated files", func(t *testing.T) {
+		// NOTE: remove when running locally (github does not allow upload of large files > 50MB)
+		t.Skip()
 		filenameA, filenameB := "../data/bigger/A_f_2.csv", "../data/bigger/B_f_2.csv"
 
 		fileA, err := os.Open(filenameA)
