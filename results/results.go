@@ -2,6 +2,7 @@ package results
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strings"
@@ -67,17 +68,43 @@ type ComparisonResult struct {
 	TotalMaxOverlap   uint
 }
 
-func (c ComparisonResult) Print(w io.Writer) {
-	fmt.Fprintln(w)
-	fmt.Fprintf(w, "Count of keys in file A: %v\n", c.KeyCountA)
-	fmt.Fprintf(w, "Count of distinct keys file A: %v\n", c.DistinctKeyCountA)
-	fmt.Fprintln(w)
-	fmt.Fprintf(w, "Count of keys in file B: %v\n", c.KeyCountB)
-	fmt.Fprintf(w, "Count of distinct keys in file B: %v\n", c.DistinctKeyCountB)
-	// fmt.Println()
-	// fmt.Printf("Count of empty keys in file B: %v\n", fileBMap[""])
-	fmt.Fprintln(w)
-	fmt.Fprintf(w, "Count of distinct overlap: %v\n", c.DistinctOverlap)
-	fmt.Fprintf(w, "Count of total max overlap: %v\n", c.TotalMaxOverlap)
-	fmt.Fprintln(w)
+type KeyCount struct {
+	KeyCount         uint `json:"key_count"`
+	DistinctKeyCount uint `json:"distinct_key_count"`
+}
+
+type Overlap struct {
+	DistinctOverlap uint `json:"distinct_overlap"`
+	TotalMaxOverlap uint `json:"total_max_overlap"`
+}
+
+func (c ComparisonResult) Print(w io.Writer) error {
+	result := struct {
+		FileA   KeyCount `json:"file_a"`
+		FileB   KeyCount `json:"file_b"`
+		Overlap Overlap  `json:"overlap"`
+	}{
+		FileA: KeyCount{
+			KeyCount:         c.KeyCountA,
+			DistinctKeyCount: c.DistinctKeyCountA,
+		},
+		FileB: KeyCount{
+			KeyCount:         c.KeyCountB,
+			DistinctKeyCount: c.DistinctKeyCountB,
+		},
+		Overlap: Overlap{
+			DistinctOverlap: c.DistinctOverlap,
+			TotalMaxOverlap: c.TotalMaxOverlap,
+		},
+	}
+	resultJSON, err := json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		return fmt.Errorf("error marshaling json response: %w", err)
+	}
+	_, err = fmt.Fprintln(w, string(resultJSON))
+	if err != nil {
+		return fmt.Errorf("error printing to resource: %w", err)
+	}
+
+	return nil
 }
