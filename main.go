@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -33,27 +34,26 @@ type Comparator interface {
 }
 
 func main() {
+	chunkSize := flag.Int("chunksize", 1000, "Size of the chunks to process at a time")
+	filenameA := flag.String("fileA", "", "filename of the first file to compare")
+	filenameB := flag.String("fileB", "", "filename of the second file to compare")
+	flag.Parse()
 	// Check if the correct number of arguments are passed
-	if len(os.Args) < 3 {
-		fmt.Println("Usage: go run main.go <file1.csv> <file2.csv>")
+	if *filenameA == "" || *filenameB == "" {
+		fmt.Println("Usage: go run main.go [--chunksize=1000] <file1.csv> <file2.csv>")
 		return
 	}
 
-	// get the filenames from the arguments
-	filenameA := os.Args[1]
-	filenameB := os.Args[2]
-
 	// Print the file names
-	fmt.Printf("File A: %s\n", filenameA)
-	fmt.Printf("File B: %s\n", filenameB)
+	fmt.Printf("File A: %s\n", *filenameA)
+	fmt.Printf("File B: %s\n", *filenameB)
 
-	fileA := mustGetCSVFIle(filenameA)
+	fileA := mustGetCSVFIle(*filenameA)
 	defer fileA.Close()
-	fileB := mustGetCSVFIle(filenameB)
+	fileB := mustGetCSVFIle(*filenameB)
 	defer fileB.Close()
 
 	var comparator Comparator
-	chunksize := 1000
 
 	/*
 		comparator = usemaps.NewComparator(chunksize)
@@ -65,7 +65,7 @@ func main() {
 	*/
 
 	// 0.00001, 0.8 works well with the given sample data
-	comparator = usebitset.NewComparator(chunksize, 0.00001, 0.8)
+	comparator = usebitset.NewComparator(*chunkSize, 0.00001, 0.8)
 	result, err := comparator.Compare(fileA, fileB)
 	if err != nil {
 		fmt.Printf("err getting result: %v", err)
