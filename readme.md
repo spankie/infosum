@@ -75,6 +75,17 @@ compute the total overlap of all keys between files.
    go run main.go data/A_f.csv data/B_f.csv
    ```
 
+   You can also run the test using make:
+   ```
+   make test
+   ```
+
+   of if you don't have make installed:
+
+   ```
+   go test ./...
+   ```
+
 4. **View Results**:
    The program outputs the results for each file and their comparisons, like this:
    
