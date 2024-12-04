@@ -23,25 +23,7 @@ func NewComparator(chunksize int, epsilon, delta float64) bitsetComparator {
 	}
 }
 
-// TODO: pass the estimation parameters
 func (bsc bitsetComparator) Compare(fileA, fileB io.Reader) (*results.ComparisonResult, error) {
-	// Bitset of 100M bits to track 8 digits udprn keys
-	// 100_000_000
-	// bitsetA := bitset.New(100)
-	// bitsetB := bitset.New(100)
-
-	// // epsilon, delta := 0.00001, 0.8 // (3, 200,000)// passes for the tasks files
-	// epsilon, delta := 0.0000001, 0.9  // (3, 20, 000, 000) // passes for the generated files
-	// cmsA, err := cms.New(3, 2_000_00) //cms.NewWithEstimates(epsilon, delta) // error rate: 0.1%, confidence: 99%
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// cmsB, err := cms.New(3, 2_000_00) //cms.NewWithEstimates(epsilon, delta)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// fmt.Printf("ε: %f, δ: %f -> d: %d, w: %d\n", epsilon, delta, cmsA.D(), cmsA.W())
-
 	datasetA, err := newDataset(fileA, bsc.epsilon, bsc.delta)
 	if err != nil {
 		return nil, err
@@ -75,12 +57,6 @@ func (bsc bitsetComparator) Compare(fileA, fileB io.Reader) (*results.Comparison
 		DistinctKeyCountB: uint(datasetB.distinctCount()),
 	}
 	result.DistinctOverlap, result.TotalMaxOverlap = bsc.distinctOverlap(datasetA, datasetB)
-
-	// result.DistinctKeyCountA = uint64(bitsetA.Count())
-	// result.DistinctKeyCountB = uint64(bitsetB.Count())
-	// result.DistinctOverlap = uint64(bitsetA.Intersection(bitsetB).Count())
-
-	// result.TotalMaxOverlap = uint64(getTotalOverlapMany(intersection, cmsA, cmsB))
 
 	return result, nil
 }

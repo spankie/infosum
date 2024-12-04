@@ -28,7 +28,8 @@ func StreamCSVInChunks(source io.Reader, chunkSize int, processChunk func([]stri
 	// Read the file in chunks
 	chunk := make([]string, 0, chunkSize)
 	for {
-		chunk = chunk[:0] // reuse the chunk by Reseting slice length and retain capacity
+		// reuse the chunk by Reseting slice length and retain capacity
+		chunk = chunk[:0]
 		// Read up to chunkSize lines
 		for i := 0; i < chunkSize; i++ {
 			record, err := reader.Read()

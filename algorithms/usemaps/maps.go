@@ -7,17 +7,17 @@ import (
 	"github.com/spankie/infosum/results"
 )
 
-type mapComparator struct {
+type comparator struct {
 	chuksize int
 }
 
 // NewComparator returns a comparator that uses maps to compare two files
 // @param chunksize specifies how many items to read from the files at a time for processing
-func NewComparator(chunksize int) mapComparator {
-	return mapComparator{chuksize: chunksize}
+func NewComparator(chunksize int) comparator {
+	return comparator{chuksize: chunksize}
 }
 
-func (mc mapComparator) Compare(fileA, fileB io.Reader) (*results.ComparisonResult, error) {
+func (mc comparator) Compare(fileA, fileB io.Reader) (*results.ComparisonResult, error) {
 	datasetA := newDataset(fileA)
 	datasetB := newDataset(fileB)
 

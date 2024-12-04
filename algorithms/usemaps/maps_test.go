@@ -22,7 +22,7 @@ import (
 */
 
 func BenchmarkCompareWithMaps(b *testing.B) {
-	fileA, fileB := "../data/A_f.csv", "../data/B_f.csv"
+	fileA, fileB := "../../data/A_f.csv", "../../data/B_f.csv"
 
 	fA, err := os.Open(fileA)
 	if err != nil {
@@ -101,7 +101,7 @@ func TestCompareWithMaps(t *testing.T) {
 	})
 
 	t.Run("using the actual tasks files", func(t *testing.T) {
-		filenameA, filenameB := "../data/A_f.csv", "../data/B_f.csv"
+		filenameA, filenameB := "../../data/A_f.csv", "../../data/B_f.csv"
 
 		fileA, err := os.Open(filenameA)
 		if err != nil {

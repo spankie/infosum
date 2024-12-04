@@ -6,8 +6,8 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/spankie/infosum/algorithms/usebitset"
 	"github.com/spankie/infosum/results"
-	"github.com/spankie/infosum/usebitset"
 )
 
 func mustGetCSVFIle(filePath string) io.ReadCloser {
