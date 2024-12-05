@@ -49,6 +49,7 @@ func TestValidate(t *testing.T) {
 }
 
 func createTempCSV(t *testing.T, data [][]string) (string, error) {
+	t.Helper()
 	tempFile, err := os.CreateTemp("", "tempfile-*.csv")
 	if err != nil {
 		return "", err
@@ -59,6 +60,7 @@ func createTempCSV(t *testing.T, data [][]string) (string, error) {
 	if err != nil {
 		tempFile.Close()
 		os.Remove(tempFile.Name())
+
 		return "", err
 	}
 

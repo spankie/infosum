@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"runtime"
 
 	"github.com/spankie/infosum/algorithms/bitset"
 	"github.com/spankie/infosum/results"
@@ -18,14 +17,6 @@ func mustGetCSVFIle(filePath string) io.ReadCloser {
 		panic(fmt.Errorf("cannot find file %v: %w", filePath, err))
 	}
 	return f
-}
-
-func printMemoryUsage() {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
-	fmt.Printf("Allocated memory: %v MB\n", memStats.Alloc/1024/1024.00)
-	fmt.Printf("Total allocated: %v MB\n", memStats.TotalAlloc/1024/1024.00)
-	fmt.Printf("Heap allocated: %v MB\n", memStats.HeapAlloc/1024/1024.00)
 }
 
 type Comparator interface {
@@ -52,10 +43,8 @@ func main() {
 	fileB := mustGetCSVFIle(*filenameB)
 	defer fileB.Close()
 
-	var comparator Comparator
-
 	/*
-		comparator = usemaps.NewComparator(chunksize)
+		comparator := usemaps.NewComparator(chunksize)
 		result, err := comparator.Compare(fileA, fileB)
 		if err != nil {
 			fmt.Printf("err getting result: %v", err)
@@ -64,13 +53,11 @@ func main() {
 	*/
 
 	// 0.00001, 0.8 works well with the given sample data
-	comparator = bitset.NewComparator(*chunkSize, 0.00001, 0.8)
+	comparator := bitset.NewComparator(*chunkSize, 0.00001, 0.8)
 	result, err := comparator.Compare(fileA, fileB)
 	if err != nil {
 		panic(fmt.Errorf("err getting result: %v", err))
 	}
 
 	result.Print(os.Stdout)
-
-	// printMemoryUsage()
 }

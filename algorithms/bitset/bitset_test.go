@@ -9,20 +9,26 @@ import (
 	"github.com/spankie/infosum/results"
 )
 
-func BenchmarkCompareWithBitSet(b *testing.B) {
-	fileA, fileB := "../../data/A_f.csv", "../../data/B_f.csv"
-
-	fA, err := os.Open(fileA)
+func getFiles(b testing.TB, filenameA, filenameB string) (*os.File, *os.File) {
+	b.Helper()
+	fA, err := os.Open(filenameA)
 	if err != nil {
-		b.Fatalf("error reading file %s: error: %v", fileA, err)
+		b.Fatalf("error reading file %s: error: %v", filenameA, err)
 	}
 	b.Cleanup(func() { fA.Close() })
 
-	fB, err := os.Open(fileB)
+	fB, err := os.Open(filenameB)
 	if err != nil {
-		b.Fatalf("error reading file %s: error: %v", fileA, err)
+		b.Fatalf("error reading file %s: error: %v", filenameB, err)
 	}
 	b.Cleanup(func() { fB.Close() })
+
+	return fA, fB
+}
+
+func BenchmarkCompareWithBitSet(b *testing.B) {
+	filenameA, filenameB := "../../data/A_f.csv", "../../data/B_f.csv"
+	fA, fB := getFiles(b, filenameA, filenameB)
 
 	comparator := NewComparator(1000, 0.00001, 0.8)
 
@@ -93,18 +99,7 @@ func TestCompareWithBitSet(t *testing.T) {
 
 	t.Run("using the actual tasks files", func(t *testing.T) {
 		filenameA, filenameB := "../../data/A_f.csv", "../../data/B_f.csv"
-
-		fileA, err := os.Open(filenameA)
-		if err != nil {
-			t.Fatalf("error reading file %s: error: %v", filenameA, err)
-		}
-		t.Cleanup(func() { fileA.Close() })
-
-		fileB, err := os.Open(filenameB)
-		if err != nil {
-			t.Fatalf("error reading file %s: error: %v", filenameA, err)
-		}
-		t.Cleanup(func() { fileB.Close() })
+		fileA, fileB := getFiles(t, filenameA, filenameB)
 
 		comparator := NewComparator(1000, 0.00001, 0.8)
 		result, err := comparator.Compare(io.NopCloser(fileA), io.NopCloser(fileB))

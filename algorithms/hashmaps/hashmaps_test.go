@@ -50,7 +50,10 @@ func BenchmarkCompareWithMaps(b *testing.B) {
 			b.Fatalf("failed to reset file position: %v", err)
 		}
 
-		comparator.Compare(io.NopCloser(fA), io.NopCloser(fB))
+		_, err = comparator.Compare(io.NopCloser(fA), io.NopCloser(fB))
+		if err != nil {
+			b.Fatalf("expected nil error but got : %v", err)
+		}
 	}
 }
 

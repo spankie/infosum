@@ -7,6 +7,9 @@ FILE_B=data/B_f.csv
 test:
 	@go test -v ./...
 
+lint:
+	@golangci-lint run
+
 bench:
 	@go test -bench=. -benchmem -benchtime=4s ./...
 
