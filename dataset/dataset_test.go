@@ -115,10 +115,10 @@ func TestStreamCSVInChunks(t *testing.T) {
 	}
 
 	// make sure each chunksize is the maximum chunksize possible
-	expentedChunksLength := len(expectedChunks)
+	expectedChunksLength := len(expectedChunks)
 	actualChunksLength := len(actualChunks)
-	if actualChunksLength != expentedChunksLength {
-		t.Fatalf("number of chunks should be %v but got %v", expentedChunksLength, actualChunksLength)
+	if actualChunksLength != expectedChunksLength {
+		t.Fatalf("number of chunks should be %v but got %v", expectedChunksLength, actualChunksLength)
 	}
 
 	for i, e := range expectedChunks {

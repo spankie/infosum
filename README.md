@@ -66,13 +66,13 @@ compute the total overlap of all keys between files.
        placeholder filenames with your filenames):
    
    ```bash
-   go run main.go <fileA> <fileB>
+   go run main.go --chunksize=<chunksize> --fileA=<fileA> --fileB=<fileB>
    ```
    
    e.g:
    
    ```bash
-   go run main.go data/A_f.csv data/B_f.csv
+   go run main.go --chunksize=1000 --fileA=data/A_f.csv --fileB=data/B_f.csv
    ```
 
    You can also run the test using make:
@@ -118,7 +118,8 @@ and computational overhead especially for really large dataset, providing near-a
 
 - **`data` Folder**: Contains small sample datasets for validation.
 - **`data/bigger` Folder**: Contains larger datasets for performance testing.
-- **`bitset`**: implements the solution using [Bitset](https://github.com/bits-and-blooms/bitset) and [Count-Min Sketch](https://github.com/shenwei356/countminsketch) for calculating the results
+- **`bitset`**: implements the solution using [Bitset](https://github.com/bits-and-blooms/bitset)
+and [Count-Min Sketch](https://github.com/shenwei356/countminsketch) for calculating the results
 - **`hashmaps`**: implements the solution using hashmap for calculating the results.
 - **`dataset`**: contains function to read the dataset from the file
 - **`results`**: is a package that defines a datastructure that defines the expected result and prints it out.

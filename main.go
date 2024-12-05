@@ -44,7 +44,7 @@ func main() {
 	defer fileB.Close()
 
 	/*
-		comparator := usemaps.NewComparator(chunksize)
+		comparator := hashmaps.NewComparator(chunksize)
 		result, err := comparator.Compare(fileA, fileB)
 		if err != nil {
 			fmt.Printf("err getting result: %v", err)
