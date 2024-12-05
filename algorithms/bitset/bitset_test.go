@@ -1,4 +1,4 @@
-package usebitset
+package bitset
 
 import (
 	"bytes"

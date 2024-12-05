@@ -1,4 +1,4 @@
-package usebitset
+package bitset
 
 import (
 	"io"
@@ -87,37 +87,3 @@ func getTotalOverlapMany(bs *bitset.BitSet, cmsA, cmsB *countminsketch.CountMinS
 
 	return totalOverlap
 }
-
-/*
-func generateRandomNumber(digits int) int {
-	if digits < 7 || digits > 8 {
-		panic("Only 7 or 8 digit numbers are supported")
-	}
-
-	// Compute the range for the number
-	min := int(1e6) // 7-digit starts from 1,000,000
-	if digits == 8 {
-		min = int(1e7) // 8-digit starts from 10,000,000
-	}
-	max := min*10 - 1 // Max value for 7 or 8 digits (e.g., 9,999,999 or 99,999,999)
-
-	return rand.Intn(max-min+1) + min
-}
-
-func main() {
-	f, err := os.OpenFile("data/bigger/B_f_2.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
-	for i := 0; i < 10_000_000; i++ {
-		num := generateRandomNumber(7)
-		// log.Printf("%d\n", num)
-		_, err := f.WriteString(fmt.Sprintf("%d\n", num))
-		if err != nil {
-			fmt.Printf("error writing to file: %v", err)
-			return
-		}
-	}
-}
-*/

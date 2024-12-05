@@ -1,10 +1,10 @@
-package usemaps
+package maps
 
 import (
 	"fmt"
 	"io"
 
-	"github.com/spankie/infosum/results"
+	ds "github.com/spankie/infosum/dataset"
 )
 
 type dataset struct {
@@ -23,7 +23,7 @@ func (d *dataset) processCSV(chunksize int) {
 	if d.datamap == nil {
 		d.datamap = make(map[string]int, chunksize)
 	}
-	err := results.StreamCSVInChunks(d.resource, chunksize, func(chunk []string) {
+	err := ds.StreamCSVInChunks(d.resource, chunksize, func(chunk []string) {
 		d.count += uint(len(chunk))
 		for _, record := range chunk {
 			if _, ok := d.datamap[record]; !ok {

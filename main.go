@@ -7,7 +7,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/spankie/infosum/algorithms/usebitset"
+	"github.com/spankie/infosum/algorithms/bitset"
 	"github.com/spankie/infosum/results"
 )
 
@@ -15,8 +15,7 @@ func mustGetCSVFIle(filePath string) io.ReadCloser {
 	// Open the CSV file
 	f, err := os.Open(filePath)
 	if err != nil {
-		fmt.Printf("cannot find file %v\n", filePath)
-		os.Exit(1)
+		panic(fmt.Errorf("cannot find file %v: %w", filePath, err))
 	}
 	return f
 }
@@ -65,11 +64,10 @@ func main() {
 	*/
 
 	// 0.00001, 0.8 works well with the given sample data
-	comparator = usebitset.NewComparator(*chunkSize, 0.00001, 0.8)
+	comparator = bitset.NewComparator(*chunkSize, 0.00001, 0.8)
 	result, err := comparator.Compare(fileA, fileB)
 	if err != nil {
-		fmt.Printf("err getting result: %v", err)
-		os.Exit(1)
+		panic(fmt.Errorf("err getting result: %v", err))
 	}
 
 	result.Print(os.Stdout)

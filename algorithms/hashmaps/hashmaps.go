@@ -1,4 +1,4 @@
-package usemaps
+package maps
 
 import (
 	"io"
